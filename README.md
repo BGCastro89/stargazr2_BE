@@ -1,4 +1,8 @@
 # STARgazr (v2)
+
+Modified for Google Cloud Run
+
+
 Rebuilding ScienceHackDay Stargazr webapp (mostly) from scratch.
 
 Stargazr aggregates all the information needed to plan the perfect stargazing trip into one place! Getting information on weather, light pollution, and more!
