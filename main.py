@@ -9,7 +9,7 @@ import requests
 import time as t
 
 from datetime import datetime as dt
-# from flask import Flask
+from flask import Flask
 
 from helpers import (
     get_current_unix_time,
@@ -17,6 +17,8 @@ from helpers import (
 )
 
 import apis as apis
+
+app = Flask(__name__)
 
 SECONDS_IN_DAY = 86400
 
@@ -226,7 +228,8 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
 
 
 # TODO: CleanUp/Refactor
-def get_stargaze_report(request):
+@app.route('/',  methods=['GET', 'POST'])
+def get_stargaze_report(lat_selected, lng_selected, lat_org=None, lng_org=None, stargazing_time=None):
 
     # lat_selected, lng_selected, lat_org=None, lng_org=None, stargazing_time=None):
     """get stargazing report based on given coordinates.
@@ -332,4 +335,5 @@ def test():
 
 
 if __name__ == "__main__":
-    test()
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    # test()
