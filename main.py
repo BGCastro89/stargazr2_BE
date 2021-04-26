@@ -229,7 +229,7 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
 
 # TODO: CleanUp/Refactor
 @app.route('/',  methods=['GET', 'POST'])
-def get_stargaze_report(lat_selected, lng_selected, lat_org=None, lng_org=None, stargazing_time=None):
+def get_stargaze_report():
 
     # lat_selected, lng_selected, lat_org=None, lng_org=None, stargazing_time=None):
     """get stargazing report based on given coordinates.
