@@ -229,7 +229,7 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
 
 # TODO: CleanUp/Refactor
 @app.route('/',  methods=['GET', 'POST'])
-def get_stargaze_report():
+def get_stargaze_report(request):
 
     # lat_selected, lng_selected, lat_org=None, lng_org=None, stargazing_time=None):
     """get stargazing report based on given coordinates.
@@ -297,7 +297,12 @@ def get_stargaze_report():
         'drivingDistance': driving_distance,
         'CDSChart': cs_chart
     }
-    return json.dumps(site_data)
+
+    response = flask.jsonify(site_data)
+    response.headers.set('Access-Control-Allow-Origin', '*')
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST')
+
+    return response
 
 
 def test():
