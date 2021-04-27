@@ -242,11 +242,15 @@ def get_stargaze_report():
 
     returns: dictionary with data needed for API response/display in front end
     """
-    lat_selected = request.args.get('lat', type = float)
-    lng_selected = request.args.get('lng', type = float)
-    lat_org = request.args.get('lat', None, type = float)
-    lng_org = request.args.get('lng', None, type = float)
-    stargazing_time = request.args.get('lat', None, type = float)
+    lat_selected = request.args.get('lat_selected', type = float)
+    lng_selected = request.args.get('lng_selected', type = float)
+    lat_org = request.args.get('lat_org', None, type = float)
+    lng_org = request.args.get('lng_org', None, type = float)
+    stargazing_time = request.args.get('stargazing_time', None, type = float)
+
+    # import pdb; pdb.set_trace()
+
+    # aise TypeError
 
 
     curr_time = get_current_unix_time()
@@ -341,5 +345,5 @@ def test():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8085)))
     # test()

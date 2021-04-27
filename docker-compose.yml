@@ -4,6 +4,6 @@ services:
     build: .
     command: python main.py
     ports:
-      - "5000:5000"
+      - "8085:8085"
     volumes:
       - .:/docker-image
