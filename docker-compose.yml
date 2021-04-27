@@ -7,3 +7,6 @@ services:
       - "8085:8085"
     volumes:
       - .:/docker-image
+    environment:
+      -  DARKSKY_API_KEY
+      -  G_MAPS_API_KEY

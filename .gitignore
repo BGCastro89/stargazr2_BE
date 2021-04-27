@@ -5,3 +5,4 @@ starg/
 config.py
 app-env
 api_runtime_test.py
+.env
