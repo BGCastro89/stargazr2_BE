@@ -9,8 +9,8 @@ import requests
 import time as t
 
 from datetime import datetime as dt
-from flask import Flask
-from flask import request
+
+import flask
 
 from helpers import (
     get_current_unix_time,
@@ -19,7 +19,7 @@ from helpers import (
 
 import apis as apis
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 SECONDS_IN_DAY = 86400
 
@@ -242,11 +242,11 @@ def get_stargaze_report():
 
     returns: dictionary with data needed for API response/display in front end
     """
-    lat_selected = request.args.get('lat_selected', type = float)
-    lng_selected = request.args.get('lng_selected', type = float)
-    lat_org = request.args.get('lat_org', None, type = float)
-    lng_org = request.args.get('lng_org', None, type = float)
-    stargazing_time = request.args.get('stargazing_time', None, type = float)
+    lat_selected = flask.request.args.get('lat_selected', type = float)
+    lng_selected = flask.request.args.get('lng_selected', type = float)
+    lat_org = flask.request.args.get('lat_org', None, type = float)
+    lng_org = flask.request.args.get('lng_org', None, type = float)
+    stargazing_time = flask.request.args.get('stargazing_time', None, type = float)
 
     # import pdb; pdb.set_trace()
 
