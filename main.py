@@ -118,9 +118,9 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     return {
         'status': "Sucess",
         'precipProb': precip_prob,
-        'humidity': round(humidity*100),
+        'humidity': humidity,
         'visibility': visibility,
-        'cloudCover': round(cloud_cover*100),
+        'cloudCover': cloud_cover,
         'moonPhase': moon_phase,
     }
 
@@ -284,8 +284,8 @@ def get_stargaze_report():
 
     if not response_data:
         precip_prob = weather_data['precipProb']
-        humidity = weather_data['humidity']
-        cloud_cover = weather_data['cloudCover']
+        humidity = round(weather_data['humidity']*100)
+        cloud_cover = round(weather_data['cloudCover']*100)
         lunar_phase = weather_data['moonPhase']
         elevation = get_site_elevation(lat_selected, lng_selected)
         light_pol = apis.light_pollution(float(lat_selected), float(lng_selected))
