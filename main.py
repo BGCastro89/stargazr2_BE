@@ -106,7 +106,7 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     # a lot more params in url request used. Probably worth it in the long run
     weather_data = apis.dark_sky(lat_selected, lng_selected, time)
 
-    if not weather_data['currently']:
+    if 'currently' not in weather_data:
         return {'status': "Error: Weather Report Failed. Try again."}
 
     precip_prob = weather_data['currently']['precipProbability']
