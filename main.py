@@ -174,8 +174,13 @@ def get_site_elevation(lat, lng):
     returns: dictionary with elevation, distance in meters
     """
     elev_data = apis.gmaps_elevation(lat, lng)
-    # print(elev_data['results'][0])
-    return elev_data['results'][0]['elevation']
+
+    if elev_data['results'][0]['status'] != "OK":
+        return 0 # Default to Sea Level if there is an error
+
+    # Dont use elevations below Sea Level
+    # TODO: Differentiate between below ocean or just Death Valley, Dead Sea, etc...
+    return max(elev_data['results'][0]['elevation'],0)
 
 
 def site_rating_desciption(site_quality):
