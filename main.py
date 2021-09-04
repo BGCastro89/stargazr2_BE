@@ -280,7 +280,7 @@ def get_stargaze_report():
     weather_data = get_weather_at_time(lat_selected, lng_selected, stargazing_time)
     
     if weather_data["status"] != "Sucess":
-        response_data = weather_data["status"]
+        response_data = weather_data
 
     if not response_data:
         precip_prob = weather_data['precipProb']
