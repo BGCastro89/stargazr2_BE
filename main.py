@@ -118,9 +118,9 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     return {
         'status': "Sucess",
         'precipProb': precip_prob,
-        'humidity': humidity,
+        'humidity': round(humidity*100),
         'visibility': visibility,
-        'cloudCover': cloud_cover,
+        'cloudCover': round(cloud_cover*100),
         'moonPhase': moon_phase,
     }
 
@@ -180,7 +180,7 @@ def get_site_elevation(lat, lng):
 
     # Dont use elevations below Sea Level
     # TODO: Differentiate between below ocean or just Death Valley, Dead Sea, etc...
-    return max(elev_data['results'][0]['elevation'],0)
+    return max(round(elev_data['results'][0]['elevation']),0)
 
 
 def site_rating_desciption(site_quality):
@@ -228,8 +228,8 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
         return -1
 
     # Find overall site quality using weighted average
-    site_quality_rating = ((((precip_quality * lightpol_quality * cloud_quality) * 8) + (humid_quality * 2)) / 10) * 100
-
+    site_quality_rating = round(((((precip_quality * lightpol_quality * cloud_quality) * 8) + (humid_quality * 2)) / 10) * 100
+)
     return site_quality_rating
 
 
