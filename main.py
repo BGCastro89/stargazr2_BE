@@ -175,7 +175,7 @@ def get_site_elevation(lat, lng):
     """
     elev_data = apis.gmaps_elevation(lat, lng)
 
-    if elev_data['results'][0]['status'] != "OK":
+    if elev_data['status'] != "OK":
         return 0 # Default to Sea Level if there is an error
 
     # Dont use elevations below Sea Level
