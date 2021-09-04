@@ -232,7 +232,7 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
 @app.route('/',  methods=['GET', 'POST'])
 def get_stargaze_report():
 
-    # lat_selected, lng_selected, lat_org=None, lng_org=None, stargazing_time=None):
+    # lat_selected, lng_selected, lat_org=None, lng_org=None, time=None):
     """get stargazing report based on given coordinates.
 
     args:
@@ -246,11 +246,7 @@ def get_stargaze_report():
     lng_selected = flask.request.args.get('lng_selected', type = float)
     lat_org = flask.request.args.get('lat_org', None, type = float)
     lng_org = flask.request.args.get('lng_org', None, type = float)
-    stargazing_time = flask.request.args.get('stargazing_time', None, type = float)
-
-    # import pdb; pdb.set_trace()
-
-    # aise TypeError
+    stargazing_time = flask.request.args.get('time', None, type = float)
 
     response_data = {}
 
