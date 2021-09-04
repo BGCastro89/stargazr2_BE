@@ -30,14 +30,12 @@ def get_darkness_times(lat_selected, lng_selected, time):
     on current day. Estimates times for following and previous days.
 
     args: String representing lat/lng coords
-    returns: Int of 10-digit Unix Time (integer seconds)
+    returns: Dict times, each a int of 10-digit Unix Time (integer seconds)
     """
     sunset_data = apis.sunrise_sunset_time(lat_selected, lng_selected, time)
 
     # start of astronomical twilight is good enough to begin stargazing
     # Nautical Twilight End = Start of Astronomical Twilight and vice-versa
-    print("Hello!?!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<=======")
-    print(sunset_data)
     morning_stagazing_ends = sunset_data['results']['nautical_twilight_begin']
     night_stagazing_begins = sunset_data['results']['nautical_twilight_end']
 
@@ -79,7 +77,7 @@ def set_time_to_dark(darkness_times, curr_time_unix):
     far enough below horizon to allow stargazing
 
     args: Unix times for current time, darkness start/end time
-    returns: Boolean
+    returns: int of 10-digit Unix Time (integer seconds)
     """
     # Must consider several cases because sunrise-sunset API processes all times as UTC, such that
     # depending on the time zone of user, the darkness times returned may be given for the following day.
@@ -102,7 +100,7 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     """Call API Handler for CSC Chart, process input and response
 
     args: lat/lng and time for stargazing site
-    returns: dictionary with just the weather data we're interested in
+    returns: dictionary with just the weather data needed
     """
     # TODO: ONLY get data we need from API requests? Would be faster but requires
     # a lot more params in url request used. Probably worth it in the long run
@@ -157,7 +155,7 @@ def get_CS_chart(lat_selected, lng_selected, curr_time, stargazing_time):
     """Call API Handler for Clear Sky Chart, process input and response
 
     args: lat/lng for stargazing site, time
-    returns: dictionary with distance in time and space, in km and human readable
+    returns: dictionary with data on nearest CSC
     """
     if stargazing_time < curr_time + SECONDS_IN_DAY:
         cs_chart = apis.nearest_csc(float(lat_selected), float(lng_selected))
@@ -205,7 +203,7 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
     """Calculate the stargazing quality based off weather, light pollution, etc.
 
     args: site statistics, light pollution
-    returns: Double rating from 0 - 100, -1 for err
+    returns: float rating from 0 - 100, -1 for err
     """
     # TODO Equation for calulcating the rating needs some work.
     # 7 percent cloud cover and otherwise perfect conditions should not be a rating of 77, Fair.
