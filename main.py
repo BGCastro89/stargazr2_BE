@@ -106,7 +106,8 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     # a lot more params in url request used. Probably worth it in the long run
     weather_data = apis.dark_sky(lat_selected, lng_selected, time)
 
-    # print(weather_data)
+    if not weather_data['currently']:
+        return {'status': "Error: Weather Report Failed. Try again."}
 
     precip_prob = weather_data['currently']['precipProbability']
     humidity = weather_data['currently']['humidity']
@@ -115,6 +116,7 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     moon_phase = weather_data['daily']['data'][0]['moonPhase']  # 0 tells to grab todays phase. allows 0-7 for phases over next week
 
     return {
+        'status': "Sucess",
         'precipProb': precip_prob,
         'humidity': humidity,
         'visibility': visibility,
@@ -250,6 +252,7 @@ def get_stargaze_report():
 
     # aise TypeError
 
+    response_data = {}
 
     curr_time = get_current_unix_time()
 
@@ -258,15 +261,15 @@ def get_stargaze_report():
 
     # Disallow requests for stargazing more than 8 days in future, or 1 day in past
     if stargazing_time > curr_time + SECONDS_IN_DAY * 8:
-        return {'status': "Reports are only availible for the next week"}
+        response_data = {'status': "Error: Reports are only availible for the next week"}
     if stargazing_time < curr_time - SECONDS_IN_DAY:
-        return {'status': "Reports for previous days not supported"}
+        response_data = {'status': "Error: Reports for previous days not supported"}
 
     # Determine what times it gets dark on a given day, if it is not dark at requested stargazing time, set time to once it gets dark
     # Account for 24+ hr long days and nights in the arctice and anarctice
     darkness_times = get_darkness_times(lat_selected, lng_selected, stargazing_time)
     if darkness_times['sun_status'] == 'Midnight Sun':
-        return {'status': "One cannot stargaze in the land of the midnight sun. Try going closer to the equator!"}
+        response_data = {'status': "Error: One cannot stargaze in the land of the midnight sun. Try going closer to the equator!"}
     elif darkness_times['sun_status'] == 'Polar Night':
         stargazing_time = curr_time
     else:
@@ -274,34 +277,38 @@ def get_stargaze_report():
         stargazing_time = set_time_to_dark(darkness_times, stargazing_time)
 
     weather_data = get_weather_at_time(lat_selected, lng_selected, stargazing_time)
+    
+    if weather_data["status"] != "Sucess":
+        response_data = weather_data["status"]
 
-    precip_prob = weather_data['precipProb']
-    humidity = weather_data['humidity']
-    cloud_cover = weather_data['cloudCover']
-    lunar_phase = weather_data['moonPhase']
-    elevation = get_site_elevation(lat_selected, lng_selected)
-    light_pol = apis.light_pollution(float(lat_selected), float(lng_selected))
-    site_quality = calculate_rating(precip_prob, humidity, cloud_cover, light_pol)
-    site_quality_discript = site_rating_desciption(site_quality)
+    if not response_data:
+        precip_prob = weather_data['precipProb']
+        humidity = weather_data['humidity']
+        cloud_cover = weather_data['cloudCover']
+        lunar_phase = weather_data['moonPhase']
+        elevation = get_site_elevation(lat_selected, lng_selected)
+        light_pol = apis.light_pollution(float(lat_selected), float(lng_selected))
+        site_quality = calculate_rating(precip_prob, humidity, cloud_cover, light_pol)
+        site_quality_discript = site_rating_desciption(site_quality)
 
-    driving_distance = get_driving_distance(lat_org, lng_org, lat_selected, lng_selected)
-    cs_chart = get_CS_chart(lat_selected, lng_selected, curr_time, stargazing_time)
+        driving_distance = get_driving_distance(lat_org, lng_org, lat_selected, lng_selected)
+        cs_chart = get_CS_chart(lat_selected, lng_selected, curr_time, stargazing_time)
 
-    site_data = {
-        'status': "Success!",
-        'siteQuality': site_quality,
-        'siteQualityDiscript': site_quality_discript,
-        'precipProb': precip_prob,
-        'humidity': humidity,
-        'cloudCover': cloud_cover,
-        'lightPol': light_pol,
-        'elevation': elevation,
-        'lunarphase': lunar_phase,
-        'drivingDistance': driving_distance,
-        'CDSChart': cs_chart
-    }
+        response_data = {
+            'status': "Success!",
+            'siteQuality': site_quality,
+            'siteQualityDiscript': site_quality_discript,
+            'precipProb': precip_prob,
+            'humidity': humidity,
+            'cloudCover': cloud_cover,
+            'lightPol': light_pol,
+            'elevation': elevation,
+            'lunarphase': lunar_phase,
+            'drivingDistance': driving_distance,
+            'CDSChart': cs_chart
+        }
 
-    response = flask.jsonify(site_data)
+    response = flask.jsonify(response_data)
     response.headers.set('Access-Control-Allow-Origin', '*')
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST')
 
