@@ -149,9 +149,9 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     return {
         'status': "Sucess",
         'precipProb': precip_prob,
-        'humidity': round(humidity,2),
+        'humidity': humidity,
         'visibility': visibility,
-        'cloudCover': round(cloud_cover,2),
+        'cloudCover': cloud_cover,
         'moonPhase': calculate_lunar_phase(moon_phase),
     }
 
@@ -288,6 +288,9 @@ def get_stargaze_report():
 
     curr_time = get_current_unix_time()
 
+    if not lat_selected or not lng_selected:
+        raise ValueError("Missing lat/lng parameters")
+
     if not stargazing_time:
         stargazing_time = curr_time
 
@@ -331,8 +334,8 @@ def get_stargaze_report():
             'siteQuality': site_quality,
             'siteQualityDiscript': site_quality_discript,
             'precipProb': precip_prob,
-            'humidity': humidity*100,
-            'cloudCover': cloud_cover*100,
+            'humidity': round(humidity*100),
+            'cloudCover': round(cloud_cover*100),
             'lightPol': light_pol,
             'elevation': elevation,
             'lunarphase': lunar_phase,
