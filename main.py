@@ -95,6 +95,36 @@ def set_time_to_dark(darkness_times, curr_time_unix):
     else:
         raise Exception("set_time_to_dark: Time selected outside bounds")
 
+def calculate_lunar_phase(moon_phase):
+    """convert fractional lunation number to % of moon full and phase name
+
+    args: moon_phase (float)
+    returns: dict of lunar percent (int) and lunar phase (str)
+    """
+
+    # Map % of way though lunar cycle to % of moon that is visible
+    lunar_percent = round(-50*math.cos(moon_phase*2*math.pi)+50 )
+
+    if moon_phase < .025:
+        lunar_phase = "New Moon"
+    elif moon_phase < .25:
+        lunar_phase = "Waxing Crecent"
+    elif moon_phase < .475:
+        lunar_phase = "Waxing Gibbous"
+    elif moon_phase < .525:
+        lunar_phase = "Full Moon"
+    elif moon_phase < .75:
+        lunar_phase = "Waning Gibbous"
+    elif moon_phase < .975:
+        lunar_phase = "Waning Crecent"
+    elif moon_phase <= 1:
+        lunar_phase = "New Moon"
+
+    return {
+        "lunar_percent": lunar_percent,
+        "lunar_phase": lunar_phase
+    }
+
 
 def get_weather_at_time(lat_selected, lng_selected, time=None):
     """Call API Handler for CSC Chart, process input and response
@@ -115,13 +145,14 @@ def get_weather_at_time(lat_selected, lng_selected, time=None):
     cloud_cover = weather_data['currently']['cloudCover']
     moon_phase = weather_data['daily']['data'][0]['moonPhase']  # 0 tells to grab todays phase. allows 0-7 for phases over next week
 
+
     return {
         'status': "Sucess",
         'precipProb': precip_prob,
         'humidity': round(humidity,2),
         'visibility': visibility,
         'cloudCover': round(cloud_cover,2),
-        'moonPhase': moon_phase,
+        'moonPhase': calculate_lunar_phase(moon_phase),
     }
 
 
