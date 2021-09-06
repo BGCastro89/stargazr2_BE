@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import debug
 import json
 import math
 import os
@@ -349,41 +348,5 @@ def get_stargaze_report():
 
     return response
 
-
-def test():
-    time = get_current_unix_time()
-
-    # Test at Pt Reyes w/o specified user location or time
-    result = get_stargaze_report(None)
-    print("********** Pt. Reyes TEST w/o time, w/o origin**********")
-    print(result, "\n")
-
-    # # Test at Pt Reyes w/o specified user location, for future time (No driving or CSC returned)
-    # result = get_stargaze_report(38.116947, -122.925357, None, None, time + SECONDS_IN_DAY*2)
-    # print("********** Pt. Reyes TEST w/o origin, in 2 days**********")
-    # print(result, "\n")
-
-    # # Test San Francisco as user location, Stony Gorge at stargazing site, no time specified (now)
-    # result = get_stargaze_report(37.7360512, -122.4997348, 38.116947, -122.925357)
-    # print("********** SF to Pt. Reyes TEST w/o time (now) **********")
-    # print(result, "\n")
-
-    # Test San Francisco as user location, Stony Gorge at stargazing site, time is in 12 hr
-    result = get_stargaze_report(37.7360512, -122.4997348, 39.580110, -122.524105, time + SECONDS_IN_DAY/2)
-    print("********** SF-Stony Gorge w/ time **********")
-    print(result, "\n")
-
-    # # Test San Francisco as user location, Pt Reyes at stargazing site, time is in 24 hr
-    # result = get_stargaze_report(37.7360512, -122.4997348, 38.116947, -122.925357, time + SECONDS_IN_DAY)
-    # print("********** SF-Pt. Reyes w/ time **********")
-    # print(result, "\n")
-
-    # # Test San Francisco as user location, Stony Gorge at stargazing site, time is in 36 hr
-    # result = get_stargaze_report(37.7360512, -122.4997348, 39.580110, -122.524105, time + SECONDS_IN_DAY*1.5)
-    # print("********** SF-Stony Gorge w/ time **********")
-    # print(result, "\n")
-
-
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8085)))
-    # test()
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8085)))
