@@ -22,6 +22,7 @@ app = flask.Flask(__name__)
 
 SECONDS_IN_DAY = 86400
 
+
 def get_darkness_times(lat_selected, lng_selected, time):
     """Call API Handler for sunrise/sunset, process input and response. 
 
@@ -93,6 +94,7 @@ def set_time_to_dark(darkness_times, curr_time_unix):
         return darkness_times['next_day_dusk']
     else:
         raise Exception("set_time_to_dark: Time selected outside bounds")
+
 
 def calculate_lunar_phase(moon_phase):
     """convert fractional lunation number to % of moon full and phase name
@@ -263,7 +265,6 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
     return site_quality_rating
 
 
-# TODO: CleanUp/Refactor
 @app.route('/',  methods=['GET', 'POST'])
 def get_stargaze_report():
 
