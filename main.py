@@ -104,7 +104,7 @@ def calculate_lunar_phase(moon_phase):
     """
 
     # Map % of way though lunar cycle to % of moon that is visible
-    lunar_percent = round(-50*math.cos(moon_phase*2*math.pi)+50 )
+    lunar_percent = round(-50*math.cos(moon_phase*2*math.pi)+50)
 
     if moon_phase < .025:
         lunar_phase = "New Moon"
