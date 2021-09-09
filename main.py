@@ -256,6 +256,8 @@ def calculate_rating(precipProbability, humidity, cloudCover, lightPol):
     if isinstance(lightPol, float):
         # should give rating between 0.9995 (Middle of Nowhere) - 0.0646 (Downtown LA)
         lightpol_quality = (abs(50 - lightPol) / 50)
+    elif lightPol == 0:
+        lightpol_quality = 1
     else:
         return -1
 
@@ -350,4 +352,5 @@ def get_stargaze_report():
     return response
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8085)))
+    print(">>>>>",os.environ.get("PORT"))
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
