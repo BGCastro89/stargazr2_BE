@@ -11,6 +11,8 @@ RUN pip install -r requirements.txt
 
 CMD ["flask", "run", "--host", "0.0.0.0"]
 
+EXPOSE 8080
+
 # FROM python:3.7
 
 # ENV APP_HOME /app #just sets a var named APP_HOME for later use

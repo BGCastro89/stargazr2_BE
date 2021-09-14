@@ -353,4 +353,4 @@ def get_stargaze_report():
 
 if __name__ == "__main__":
     print(">>>>>",os.environ.get("PORT"))
-    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8085)))
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
