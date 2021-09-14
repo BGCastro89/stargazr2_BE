@@ -11,7 +11,7 @@ RUN pip install -r requirements.txt
 
 CMD ["flask", "run", "--host", "0.0.0.0"]
 
-EXPOSE 8080
+EXPOSE 5000
 
 # FROM python:3.7
 
