@@ -9,9 +9,9 @@ WORKDIR /docker-image
 RUN pip install -r requirements.txt
 
 
-CMD ["flask", "run", "--host", "169.254.8.1"]
-
-EXPOSE 8080
+#CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["python", "main.py"]
+#EXPOSE 8080
 
 # FROM python:3.7
 
