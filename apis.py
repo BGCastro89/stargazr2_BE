@@ -2,6 +2,8 @@ import os
 import requests
 import flask
 
+from datetime import datetime as dt
+
 from helpers import (
     convert_unix_to_YMD,
 )
@@ -10,27 +12,37 @@ from helpers import (
 from light_pollution import get_light_pollution
 from nearest_csc import get_nearest_csc
 
-DARKSKY_API_KEY = os.environ.get('DARKSKY_API_KEY', '')
+VISUAL_CROSSING_API_KEY = os.environ.get('VISUAL_CROSSING_API_KEY', 'XS4YR7QVAR2GL49BHRLLDXHKG')
 G_MAPS_API_KEY = os.environ.get('G_MAPS_API_KEY', '')
 
 SUNSET_URL = "https://api.sunrise-sunset.org/json"
-DARKSKY_URL = "https://api.darksky.net/forecast/%s/%.4f,%.4f,%d"
+OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+VISUAL_CROSSING_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/%s/%s?key=%s"
 GMAPS_ELEV_URL = "https://maps.googleapis.com/maps/api/elevation/json"
 GMAPS_DIST_URL = "https://maps.googleapis.com/maps/api/distancematrix/json"
 
 
-def dark_sky(lat_selected, lng_selected, time):
-    """Gets Weather report for location and time specified using darksky api
+def open_meteo(lat, lng, unix_timestamp):
+    """Gets weather at specific lat/lon/time using Open-Meteo API.
+    Free for non-commercial use, no API key required (<10,000 calls/day).
 
-    args: lat/lng and time for stargazing site
-    returns: weather api response in json format
+    args: lat/lng for location, unix timestamp for desired time
+    returns: weather API response in JSON format
     """
-    if not DARKSKY_API_KEY:
-        raise Exception("Missing API Key for DarkSky")
+    target_hour = dt.utcfromtimestamp(unix_timestamp).strftime("%Y-%m-%dT%H:00")
 
-    request = requests.get(DARKSKY_URL % (DARKSKY_API_KEY, lat_selected, lng_selected, time))
-    print(request)
-    return request.json()
+    params = {
+        'latitude': round(lat, 4),
+        'longitude': round(lng, 4),
+        'hourly': 'precipitation_probability,relative_humidity_2m,cloud_cover,visibility',
+        'start_hour': target_hour,
+        'end_hour': target_hour,
+        'timezone': 'UTC',
+    }
+
+    response = requests.get(OPEN_METEO_URL, params=params)
+    print(response)
+    return response.json()
 
 
 def gmaps_elevation(lat_selected, lng_selected):

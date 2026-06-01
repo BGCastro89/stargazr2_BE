@@ -127,25 +127,34 @@ def calculate_lunar_phase(moon_phase):
     }
 
 
+def _calculate_moon_phase(unix_timestamp):
+    """Calculate fractional moon phase (0-1) from Unix timestamp.
+    0 = new moon, ~0.5 = full moon, 1 = back to new moon.
+    Reference: new moon at 2000-01-06 18:14 UTC (Unix: 947182440).
+    """
+    KNOWN_NEW_MOON = 947182440
+    SYNODIC_PERIOD = 29.53058867 * 86400  # seconds per lunar cycle
+    return ((unix_timestamp - KNOWN_NEW_MOON) % SYNODIC_PERIOD) / SYNODIC_PERIOD
+
+
 def get_weather_at_time(lat_selected, lng_selected, time=None):
-    """Call API Handler for CSC Chart, process input and response
+    """Call Open-Meteo API for weather at given location and time.
 
     args: lat/lng and time for stargazing site
     returns: dictionary with just the weather data needed
     """
-    # TODO: ONLY get data we need from API requests? Would be faster but requires
-    # a lot more params in url request used. Probably worth it in the long run
-    weather_data = apis.dark_sky(lat_selected, lng_selected, time)
+    weather_data = apis.open_meteo(lat_selected, lng_selected, time)
 
-    if 'currently' not in weather_data:
+    hourly = weather_data.get('hourly', {})
+    if not hourly.get('time'):
         return {'status': "Error: Weather Report Failed. Try again."}
 
-    precip_prob = weather_data['currently']['precipProbability']
-    humidity = weather_data['currently']['humidity']
-    visibility = weather_data['currently']['visibility']
-    cloud_cover = weather_data['currently']['cloudCover']
-    moon_phase = weather_data['daily']['data'][0]['moonPhase']  # 0 tells to grab todays phase. allows 0-7 for phases over next week
-
+    # Open-Meteo returns percentages (0-100); convert to fractions (0-1) to match prior behavior
+    precip_prob = (hourly['precipitation_probability'][0] or 0) / 100
+    humidity = (hourly['relative_humidity_2m'][0] or 0) / 100
+    visibility = hourly['visibility'][0] or 0
+    cloud_cover = (hourly['cloud_cover'][0] or 0) / 100
+    moon_phase = _calculate_moon_phase(time)
 
     return {
         'status': "Sucess",

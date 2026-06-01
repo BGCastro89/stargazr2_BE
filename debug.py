@@ -3,17 +3,19 @@ Various helper functions for quick and dirty manual testing, debugging, pretty p
 
 """
 
-def test_DS_api(weatherdata):
-    """DEBUG function for ensuring sucessful call to DarkSky Weather API.
+def test_open_meteo_api(weatherdata):
+    """DEBUG function for ensuring successful call to Open-Meteo Weather API.
 
-    args: json weatherdata from DarkSky API
+    args: json weatherdata from Open-Meteo API
     returns: None
     """
     print("*********************************")
-    if 'error' in weatherdata.keys():
-        print("DARKSKY API RESPONSE ERROR\nHTTP", weatherdata['code'], "-", weatherdata['error'])
+    if 'error' in weatherdata:
+        print("OPEN-METEO API RESPONSE ERROR\n", weatherdata.get('reason', weatherdata['error']))
+    elif not weatherdata.get('hourly', {}).get('time'):
+        print("OPEN-METEO API RESPONSE ERROR\nNo hourly data returned")
     else:
-        print("DARKSKY API RESPONSE SUCESS\n")
+        print("OPEN-METEO API RESPONSE SUCCESS\n")
 
 
 def pp_when_in_day_night_cycle(darkness_times, curr_time_unix):
